@@ -1,4 +1,4 @@
-package main
+package gonqueens
 
 import (
 	"fmt"
@@ -7,7 +7,7 @@ import (
 	"strconv"
 	"time"
 
-	"github.com/errbap/goia/nqueen"
+	"github.com/errbap/gonqueens/nqueen"
 )
 
 func main() {
