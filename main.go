@@ -1,4 +1,4 @@
-package gonqueens
+package main
 
 import (
 	"fmt"
