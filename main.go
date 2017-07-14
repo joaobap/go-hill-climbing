@@ -7,8 +7,8 @@ import (
 	"strconv"
 	"time"
 
-	"github.com/errbap/gonqueens/algorithm"
-	"github.com/errbap/gonqueens/nqueen"
+	"github.com/errbap/goia/algorithm"
+	"github.com/errbap/goia/nqueen"
 )
 
 func main() {
@@ -17,7 +17,7 @@ func main() {
 	size, _ := strconv.Atoi(os.Args[1])
 
 	q := nqueen.Make(size)
-	res := algorithm.Solve(size, q)
+	res := errba.Solve(size, q)
 
 	fmt.Println(*res)
 }

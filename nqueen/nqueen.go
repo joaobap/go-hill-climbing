@@ -1,8 +1,9 @@
 package nqueen
 
 import (
-	"github.com/errbap/gonqueens/algorithm"
 	"math/rand"
+
+	"github.com/errbap/goia/algorithm"
 )
 
 // N-Queen structure is a board of integers where the index represents
@@ -26,7 +27,7 @@ func Make(size int) Queen {
 	return qq
 }
 
-func (q Queen) New(size int) algorithm.HillClimbingSolver {
+func (q Queen) New(size int) errba.HillClimbingSolver {
 	return Make(size)
 }
 
@@ -119,6 +120,6 @@ func (q Queen) successor() *Queen {
 	return nil
 }
 
-func (q Queen) Successor() algorithm.HillClimbingSolver {
+func (q Queen) Successor() errba.HillClimbingSolver {
 	return q.successor()
 }
