@@ -1,6 +1,7 @@
 package nqueen
 
 import (
+	"github.com/errbap/gonqueens/algorithm"
 	"math/rand"
 )
 
@@ -14,15 +15,24 @@ type Queen struct {
 // Make a new N-Queen object with a board of mixed values after
 // a sequential initialization.
 func Make(size int) Queen {
-	q := Queen{board: make([]int, size)}
+	qq := Queen{board: make([]int, size)}
 
 	for i := 0; i < size; i++ {
-		q.board[i] = i
+		qq.board[i] = i
 	}
 
-	q.mixBoard()
+	qq.mixBoard()
 
-	return q
+	return qq
+}
+
+func (q Queen) New(size int) algorithm.HillClimbingSolver {
+	return Make(size)
+}
+
+// BoardSize returns the size of the current board.
+func (q *Queen) BoardSize() int {
+	return len(q.board)
 }
 
 // duplicates replicates a N-Queen object by creating a new one
@@ -82,24 +92,23 @@ func (q *Queen) Heuristic() int {
 
 // Objective function checks if a given board is a solution to the problem,
 // that is, if its heuristic is 0.
-func (q *Queen) Objective() bool {
+func (q Queen) Objective() bool {
 	return q.Heuristic() == 0
 }
 
 // Sucessor generates a possible list of successors and selects the first
 // one found where its heuristic is smaller or equal than the current one.
-func (q *Queen) Successor() *Queen {
-	var (
-		listSize         = len(q.board) * 5
-		successors       = make([]Queen, listSize)
-		currentHeuristic = q.Heuristic()
-	)
+func (q Queen) successor() *Queen {
+	listSize := len(q.board) * 5
+	successors := make([]Queen, listSize)
 
 	for i := 0; i < listSize; i++ {
 		newSuccessor := q.duplicate()
 		newSuccessor.swapTwo()
 		successors[i] = newSuccessor
 	}
+
+	currentHeuristic := q.Heuristic()
 
 	for _, s := range successors {
 		if s.Heuristic() <= currentHeuristic {
@@ -110,25 +119,6 @@ func (q *Queen) Successor() *Queen {
 	return nil
 }
 
-// Solve function is the function that solves the problem. This is an
-// implementation of the hill-climbing algorithm with restarts.
-func (q *Queen) Solve() Queen {
-	current := Make(len(q.board))
-
-	for {
-		for i := 0; i < len(q.board)*3; i++ {
-			successor := current.Successor()
-
-			if successor != nil {
-				current = *successor
-				break
-			} else {
-				continue
-			}
-		}
-
-		if current.Objective() {
-			return current
-		}
-	}
+func (q Queen) Successor() algorithm.HillClimbingSolver {
+	return q.successor()
 }
