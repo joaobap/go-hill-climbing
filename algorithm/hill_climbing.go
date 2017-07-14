@@ -1,4 +1,4 @@
-package errba
+package algorithm
 
 type HillClimbingSolver interface {
 	New(size int) HillClimbingSolver

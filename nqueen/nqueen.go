@@ -27,7 +27,7 @@ func Make(size int) Queen {
 	return qq
 }
 
-func (q Queen) New(size int) errba.HillClimbingSolver {
+func (q Queen) New(size int) algorithm.HillClimbingSolver {
 	return Make(size)
 }
 
@@ -120,6 +120,6 @@ func (q Queen) successor() *Queen {
 	return nil
 }
 
-func (q Queen) Successor() errba.HillClimbingSolver {
+func (q Queen) Successor() algorithm.HillClimbingSolver {
 	return q.successor()
 }

@@ -17,7 +17,7 @@ func main() {
 	size, _ := strconv.Atoi(os.Args[1])
 
 	q := nqueen.Make(size)
-	res := errba.Solve(size, q)
+	res := algorithm.Solve(size, q)
 
 	fmt.Println(*res)
 }
