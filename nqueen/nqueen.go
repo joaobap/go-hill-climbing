@@ -27,6 +27,8 @@ func Make(size int) Queen {
 	return qq
 }
 
+// New implements the HillClimbingSolver interface function to
+// create a new N Queen object.
 func (q Queen) New(size int) algorithm.HillClimbingSolver {
 	return Make(size)
 }
@@ -77,16 +79,24 @@ func (q *Queen) areThreats(first int, second int) bool {
 		q.board[first] == q.board[second]
 }
 
-// Heuristic function returns the number of threats in a board of N-Queens.
-func (q *Queen) Heuristic() int {
+func HeuristicChan(c chan int) {
 	threats := 0
 
-	for i := 0; i < len(q.board); i++ {
-		for j := i + 1; j < len(q.board); j++ {
-			if q.areThreats(i, j) {
-				threats++
-			}
+	for j := i + 1; j < len(q.board); j++ {
+		if q.areThreats(i, j) {
+			threats++
 		}
+	}
+
+	c <- threats
+}
+
+// Heuristic function returns the number of threats in a board of N-Queens.
+func (q *Queen) Heuristic() int {
+	c := make(chan int)
+
+	for i := 0; i < len(q.board); i++ {
+		go HeuristicChan(c)
 	}
 	return threats
 }
@@ -99,27 +109,23 @@ func (q Queen) Objective() bool {
 
 // Sucessor generates a possible list of successors and selects the first
 // one found where its heuristic is smaller or equal than the current one.
-func (q Queen) successor() *Queen {
-	listSize := len(q.board) * 5
-	successors := make([]Queen, listSize)
-
-	for i := 0; i < listSize; i++ {
-		newSuccessor := q.duplicate()
-		newSuccessor.swapTwo()
-		successors[i] = newSuccessor
-	}
-
+func (q Queen) successor() Queen {
+	listSize := len(q.board) * 2
 	currentHeuristic := q.Heuristic()
 
-	for _, s := range successors {
-		if s.Heuristic() <= currentHeuristic {
-			return &s
+	for i := 0; i < listSize; i++ {
+		new := q.duplicate()
+		new.swapTwo()
+
+		if new.Heuristic() <= currentHeuristic {
+			return new
 		}
 	}
-
-	return nil
+	return q
 }
 
+// Successor implements the HillClimbingSolver interface function in
+// order to generate a new successor from a internal board.
 func (q Queen) Successor() algorithm.HillClimbingSolver {
 	return q.successor()
 }

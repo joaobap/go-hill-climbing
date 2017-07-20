@@ -12,12 +12,14 @@ import (
 )
 
 func main() {
-
 	rand.Seed(time.Now().UTC().UnixNano())
 	size, _ := strconv.Atoi(os.Args[1])
 
 	q := nqueen.Make(size)
-	res := algorithm.Solve(size, q)
 
-	fmt.Println(*res)
+	resInterface := algorithm.HillClimbing(size, q)
+	result := nqueen.Queen(resInterface.(nqueen.Queen))
+
+	fmt.Printf("Final state:\n%v\n", result)
+	fmt.Printf("Heuristic:\n%v\n", result.Heuristic())
 }
